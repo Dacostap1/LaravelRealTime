@@ -33,7 +33,6 @@ class UserUpdated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        \Log::debug("user updated {$this->user->name}");
         return new Channel('users');
     }
 }

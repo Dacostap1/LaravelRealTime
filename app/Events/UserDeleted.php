@@ -33,7 +33,6 @@ class UserDeleted implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        \Log::debug("user deleted {$this->user->name}");
         return new Channel('users');
     }
 }
