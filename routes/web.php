@@ -32,3 +32,4 @@ Route::get('/start_game',  function () {
 
 Route::get('/chat', 'ChatController@show')->name('chat.show');
 Route::post('/chat/message', 'ChatController@store')->name('chat.store');
+Route::post('/chat/saludo/{user}', 'ChatController@saludo')->name('chat.saludo');

@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @push('styles')
 <style type="text/css">
-
+    #users > li {
+        cursor: pointer;
+    }
 </style>
 @section('content')
 <div class="container-fluid">
@@ -55,6 +57,7 @@
             let element = document.createElement('li');
 
             element.setAttribute('id', user.id);
+            element.setAttribute('onclick', 'saludarUsuario("' + user.id + '")');
             element.innerText = user.name;
             usersElement.appendChild(element);
         })
@@ -63,6 +66,7 @@
         let element = document.createElement('li');
 
         element.setAttribute('id', user.id);
+        element.setAttribute('onclick', 'saludarUsuario("' + user.id + '")');
         element.innerText = user.name;
         usersElement.appendChild(element);
     })
@@ -73,7 +77,6 @@
     .listen('MessageSent', (e) => {
         let element = document.createElement('li');
 
-        element.setAttribute('id', e.user.id);
         element.innerText = e.user.name + ': ' + e.message;
 
         messagesElement.appendChild(element);
@@ -91,5 +94,20 @@
         });
         messageElement.value = '';
     })
+</script>
+<script>
+    function saludarUsuario(id){
+        window.axios.post('/chat/saludo/' + id)
+    }
+</script>
+<script>
+    Echo.private('chat.saludo.{{ auth()->user()->id }}')
+        .listen('SaludoSent', (e) =>{
+            let element = document.createElement('li');
+
+            element.innerText = e.message;
+            element.classList.add('text-success')
+            messagesElement.appendChild(element);
+        });
 </script>
 @endpush
