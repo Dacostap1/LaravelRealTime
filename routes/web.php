@@ -24,8 +24,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::view('/users', 'users.showAll')->name('users.all');
 
 Route::view('/game', 'game.show')->name('game.show');
+
 Route::get('/start_game',  function () {
     $exitCode = Artisan::call('game:execute');
     return 'ejecutando';
-    //
 });
+
+Route::get('/chat', 'ChatController@show')->name('chat.show');
