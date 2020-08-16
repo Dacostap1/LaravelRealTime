@@ -23,7 +23,7 @@
                             <form action="">
                                 <div class="row py-3">
                                     <div class="col-10">
-                                        <input type="text" class="form-control">
+                                        <input id="message" type="text" class="form-control">
                                     </div>
                                     <div class="col-2">
                                         <button id="send" type="submit" class="btn btn-primary btn-block">Send</button>
@@ -48,6 +48,7 @@
 @push('scripts')
 <script>
     const usersElement = document.getElementById('users');
+    const messagesElement = document.getElementById('messages');
 
     Echo.join('chat').here((users) =>{
         users.forEach((user, index) => {
@@ -57,16 +58,38 @@
             element.innerText = user.name;
             usersElement.appendChild(element);
         })
-    }).joining((user) =>{
+    })
+    .joining((user) =>{
         let element = document.createElement('li');
 
         element.setAttribute('id', user.id);
         element.innerText = user.name;
         usersElement.appendChild(element);
-
-    }).leaving((user) =>{
+    })
+    .leaving((user) =>{
         let element = document.getElementById(user.id);
         element.parentNode.removeChild(element);
+    })
+    .listen('MessageSent', (e) => {
+        let element = document.createElement('li');
+
+        element.setAttribute('id', e.user.id);
+        element.innerText = e.user.name + ': ' + e.message;
+
+        messagesElement.appendChild(element);
+    })
+
+</script>
+<script>
+    const sendElement = document.getElementById('send');
+    const messageElement = document.getElementById('message');
+
+    sendElement.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.axios.post('/chat/message', {
+            message: messageElement.value
+        });
+        messageElement.value = '';
     })
 </script>
 @endpush
